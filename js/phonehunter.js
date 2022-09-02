@@ -1,17 +1,17 @@
-// console.log("jascri")
-const getDta = (search) => {
+
+const getDta = (search, dataLimit) => {
     fetch(`https://openapi.programming-hero.com/api/phones?search=${search}`)
         .then(response => response.json())
-        .then(data => showData(data.data));
+        .then(data => showData(data.data, dataLimit));
 }
 
 
 const container = document.getElementById('Phone-containter');
 
-const showData = (GottenData) => {
-    phoneList = GottenData.slice(0, 12)
+const showData = (GottenData, dataLimit) => {
+    phoneList = GottenData.slice(0, dataLimit)
     console.log("phone list", phoneList)
-
+    /*  */
     phoneList.forEach(phone => {
         const phoneDiv = document.createElement('div');
         phoneDiv.innerHTML = `
@@ -26,22 +26,34 @@ const showData = (GottenData) => {
     )
     showLoading(false)
 
+    // see more
+    if (GottenData.length > 12) {
+        console.log('GottenData.length', GottenData.length);
+        document.getElementById('see_all').classList.remove('hidden');
+    }
+    else {
+        console.log('GottenData.length', GottenData.length);
+        document.getElementById('see_all').classList.add('hidden');
+    }
+
+    // no data found animation
     if (phoneList == 0) {
         document.getElementById('noPhoneFound').style.display = 'block';
     }
     else {
+
         document.getElementById('noPhoneFound').style.display = 'none';
 
     }
 }
 
 
-getDta('iphone');
+getDta('iphone', 12);
 
 const findtext = () => {
     container.innerHTML = '';
     const enteredValue = document.getElementById('input_bar').value;
-    getDta(enteredValue)
+    getDta(enteredValue, 12)
 }
 
 const activeSearch = () => {
@@ -71,3 +83,9 @@ const showLoading = (signal) => {
     }
 }
 
+
+const SeeAll = () => {
+    container.innerHTML = '';
+    const enteredValue = document.getElementById('input_bar').value;
+    getDta(enteredValue)
+}
